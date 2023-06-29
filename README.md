@@ -3,6 +3,7 @@ https://github.com/Apress/pro-go
 
 подсказки
 go mod init tools - команда инициализации проекта
+go run . - выплнение
 
 
 
