@@ -6,7 +6,9 @@ go mod init tools - команда инициализации проекта
 go run . - выплнение
 
 
+structs - глава 10;
 
+следующая глава 11
 
 https://golang.org/pkg - перечень встроенных в GO пакетов
 https://github.com/go-delve/delve - репозиторий отладчика
