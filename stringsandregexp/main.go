@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 /*  СРАВНЕНИЕ СТРОК  */
 
@@ -68,8 +71,87 @@ import "fmt"
 //	fmt.Println("Title", titleChar, []byte(titleChar))
 //}
 
-/*  РАБОТА С РЕГИСТРОМ СИМВОЛОВ  */
+/*  РАБОТА С РЕГИСТРОМ СИМВОЛОВ  (пакет unicode)  */
+//func main() {
+//	product := "Kayak"
+//	/*IsLower(rune) возвращает tru если указанная руна в нижнем регистре*/
+//	for key, char := range product {
+//		fmt.Println(string(char), key, "IsLower():", unicode.IsLower(char))
+//	}
+//
+//	/*ToLower(rune) возвращает строчную руну*/
+//	for key, char := range product {
+//		fmt.Println(string(char), key, "ToLower():", string(unicode.ToLower(char)))
+//	}
+//
+//	/*IsUpper(rune) возвращает tru если указанная руна в верхнем регистре*/
+//	/*ToUpper(rune) возвращает руну в верхнем регистре*/
+//
+//	/*IsTitle(rune) возвращает tru если указанная руна является заглавной*/
+//	for _, char := range product {
+//		fmt.Println(string(char), "IsTitle():", unicode.IsTitle(char))
+//	}
+//
+//	/*ToTitle(rune) возвращает руну в заглавном регистре*/
+//	for _, char := range product {
+//		fmt.Println(string(char), "ToTitle():", string(unicode.ToTitle(char)))
+//	}
+//}
+
+/* ПРОВЕРКА СТРОК */
+//func main() {
+//	description := "A boat for one person"
+//
+//	/* Count(s, sub) функция возвращает int, который сообщает, сколько раз указанная подстрока встречается в строке s */
+//	fmt.Println("Count:", strings.Count(description, "o"))
+//
+//	/* Index(s, sub) функция возвращает индекс первого вхождения указанной подстроки в строке s. -1 если вхождения нет */
+//	fmt.Println("Index:", strings.Index(description, "o"))
+//
+//	/* LastIndex(s, sub) функция возвращает индекс последнего вхождения указанной подстроки в строке s. -1 если вхождения нет */
+//	fmt.Println("LastIndex:", strings.LastIndex(description, "o"))
+//
+//	/* IndexAny(s, sub) функция возвращает индекс первого вхождения любого символа укзанной подстроки в строке s. -1 если вхождения нет */
+//	fmt.Println("IndexAny:", strings.IndexAny(description, "o"))
+//
+//	/* LastIndexAny(s, sub) функция возвращает индекс последнего вхождения любого символа указанной подстроки в строке s. -1 если вхождения нет */
+//	fmt.Println("LastIndexAny:", strings.LastIndexAny(description, "o"))
+//
+//	/* IndexByte(s, b) функция возвращает индекс первого вхождения указанного byte в строке s. -1 если вхождения нет */
+//	/* LastIndexByte(s, b) функция возвращает индекс последнего вхождения указанного byte в строке s. -1 если вхождения нет */
+//
+//	/* Проверка строк с помощью пользовательской функций */
+//	isLetterB := func(r rune) bool {
+//		return r == 'B' || r == 'b'
+//	}
+//
+//	/* IndexFunc(s, func) функция возвращает индекс первого вхождения символа в строку s, для которого указанная функция возвращает true */
+//	fmt.Println("IndexFunc:", strings.IndexFunc(description, isLetterB))
+//
+//	/* LastIndexFunc(s, func) функция возвращает индекс последнего вхождения символа в строку s, для которого указанная функция возвращает true */
+//	fmt.Println("LastIndexFunc:", strings.LastIndexFunc(description, isLetterB))
+//}
+
+/*  МАНИПУЛИРОВАНИЕ СТРОКАМИ  */
+
+/* Разделение строк */
+
 func main() {
-	product := "Kayak"
-	fmt.Println(product)
+	description := "A boat for one person"
+	/* Fields(s) разбивает строку на пробельные символы и возвращает срез, содержащий непробельные разделы строки s */
+	/* FieldsFunc(s, func) разбивает строку на символы, для которых пользовательская функция возвращает tru, и возвращает срез, содержащий оставшиеся части строки s */
+
+	/* Split(s, sub) разбивает строку s на каждое вхождение указанной подстроки, возвращая срез. Если разделителем является пустая строка, то срез будет содержать строки для каждого символа */
+	splits := strings.Split(description, " ")
+	for _, x := range splits {
+		fmt.Println("Split >>" + x + "<<")
+	}
+	/* SplitN(s, sub, max) похожа на Split, но принимает дополнительный аргумент типа int указывающий максимальное количество возвращаемых строк. Последняя подстрока будет содержать не разделенную часть исходной строки */
+
+	/* SplitAfter(s, sub) похожа на Split, но включает строку используемую в результатах */
+	splitsAfter := strings.SplitAfter(description, " ")
+	for _, x := range splitsAfter {
+		fmt.Println("SplitAfter >>" + x + "<<")
+	}
+	/* SplitAfterN(s, sub, max) похожа на SplitAfter, но принимает дополнительный аргумент типа int, указывающий максимальное количество возвращаемых строк */
 }
