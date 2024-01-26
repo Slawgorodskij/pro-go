@@ -136,22 +136,174 @@ import (
 
 /* Разделение строк */
 
+// func main() {
+// 	//description := "A boat for one person"
+// 	/* Fields(s) разбивает строку на пробельные символы и возвращает срез, содержащий непробельные разделы строки s */
+// 	/* FieldsFunc(s, func) разбивает строку на символы, для которых пользовательская функция возвращает tru, и возвращает срез, содержащий оставшиеся части строки s */
+
+// 	/* Split(s, sub) разбивает строку s на каждое вхождение указанной подстроки, возвращая срез. Если разделителем является пустая строка, то срез будет содержать строки для каждого символа */
+// 	// splits := strings.Split(description, " ")
+// 	// for _, x := range splits {
+// 	// 	fmt.Println("Split >>" + x + "<<")
+// 	// }
+// 	/* SplitN(s, sub, max) похожа на Split, но принимает дополнительный аргумент типа int указывающий максимальное количество возвращаемых строк. Последняя подстрока будет содержать не разделенную часть исходной строки */
+
+// 	/* SplitAfter(s, sub) похожа на Split, но включает строку используемую в результатах */
+// 	// splitsAfter := strings.SplitAfter(description, " ")
+// 	// for _, x := range splitsAfter {
+// 	// 	fmt.Println("SplitAfter >>" + x + "<<")
+// 	// }
+// 	/* SplitAfterN(s, sub, max) похожа на SplitAfter, но принимает дополнительный аргумент типа int, указывающий максимальное количество возвращаемых строк */
+// 	// splitsAfterN := strings.SplitAfterN(description, " ", 3)
+// 	// for _, x := range splitsAfterN {
+// 	// 	fmt.Println("Split >>" + x + "<<")
+// 	// }
+
+// 	/* Split, SplitN, SplitAfter, SplitAfterN не работают с повторяющимися последовательностями символов*/
+// 	//description := "This  is  double  spaced"
+
+// 	// splits := strings.SplitN(description, " ", 3)
+// 	// for _, x := range splits {
+// 	// 	fmt.Println("Split >>" + x + "<<")
+// 	// }
+
+// 	/* для обработки повторяющихся пробельных символов используется функция  Fields*/
+// 	// splits := strings.Fields(description)
+// 	// for _, x := range splits {
+// 	// 	fmt.Println("Split >>" + x + "<<")
+// 	// }
+// 	// /* но она не поддерживает ограничение на количество результатов*/
+
+// }
+
+/* РАЗДЕЛЕНИЕ  с использованием пользовательской функции для разделния строк*/
+
+// func main() {
+// 	description := "This  is  double  spaced"
+// 	splitter := func(r rune) bool {
+// 		return r == ' '
+// 	}
+// 	splits := strings.FieldsFunc(description, splitter)
+// 	for _, x := range splits {
+// 		fmt.Println("Field >>" + x + "<<")
+// 	}
+// }
+
+/*Обрезка строк*/
+
+/*Обрезка пробелов - TrimSpace*/
+// func main() {
+// 	username := " Alice"
+// 	trimmed := strings.TrimSpace(username)
+// 	fmt.Println("Trimmed:", ">>" + trimmed +  "<<")
+// }
+
+/*Обрезка наборов символов - Trim, TrimLeft, TrimRight*/
+
+// func main() {
+// 	description := "A boat for one person"
+// 	trimmed := strings.Trim(description, "Asno ")
+// 	fmt.Println("Trimed:", trimmed)
+// }
+
+/*Обрезка подстрок - TrimPrefix, TrimSuffix*/
+
+// func main() {
+// 	description := "A boat for one person"
+// 	prefixTrimmed := strings.TrimPrefix(description, "A boat")
+// 	wrongPrefix := strings.TrimPrefix(description, "A hat ")
+// 	fmt.Println("Trimed:", prefixTrimmed)
+// 	fmt.Println("Not trimed:", wrongPrefix)
+// }
+
+/*Обрезка наборов символов - TrimFunc, TrimLeftFunc, TrimRightFunc */
+
+// func main() {
+// 	description := "A boat for one person"
+
+// 	trimmer := func (r rune) bool {
+// 		return r == 'A' || r == 'n'
+// 	}
+
+// 	trimmed := strings.TrimFunc(description, trimmer)
+// 	fmt.Println("Trimed:", trimmed)
+// }
+
+/*Изменение строк Replace, ReplaceAll*/
+
+// func main() {
+// 	text := "It was a boat. A small boat."
+
+// 	replace := strings.Replace(text, "boat", "canoe", 1)
+// 	replaceAll := strings.ReplaceAll(text, "boat", "truck")
+
+// 	fmt.Println("Replace:", replace)
+// 	fmt.Println("ReplaceAll:", replaceAll)
+// }
+
+/*Изменение строк с помощью функции карты Map*/
+
+// func main() {
+// 	text := "It was a boat. A small boat."
+
+// 	mapper := func(r rune) rune {
+// 		if r == 'b' {
+// 			return 'c'
+// 		}
+// 		return r
+// 	}
+
+// 	mapped := strings.Map(mapper, text)
+
+// 	fmt.Println("Mapped:", mapped)
+// }
+
+/*Использование заменителя строк Replacer*/
+
+// func main() {
+// 	text := "It was a boat. A small boat."
+
+// 	replacer := strings.NewReplacer("boat", "kayak", "small", "huge")
+// 	replaced := replacer.Replace(text)
+
+// 	fmt.Println("Replaced:", replaced)
+// }
+
+/*Построение и генерация строк Join, Repeat*/
+
+// func main() {
+// 	text := "It was a boat. A small boat."
+
+// 	elements := strings.Fields(text)
+
+// 	joined := strings.Join(elements, "--")
+
+// 	fmt.Println("Joined:", joined)
+// }
+
+/* Строительные строки
+WriteString(s) - добавляет строку s
+WriteRune(r) - добавляет символ r
+WriteByte(b) - добавляет байт b
+String() - Возвращает строку созданную компоновщиком
+Reset() - сбрасывает строку созданную построителем
+Len() - Возвращает количество байтов, используемых для хранения
+Cap() - Возвращает количество байтов, выделенных компоновщиком
+Grow(size) - Увеличивает количество байтов, используемых для хранения
+*/
+
 func main() {
-	description := "A boat for one person"
-	/* Fields(s) разбивает строку на пробельные символы и возвращает срез, содержащий непробельные разделы строки s */
-	/* FieldsFunc(s, func) разбивает строку на символы, для которых пользовательская функция возвращает tru, и возвращает срез, содержащий оставшиеся части строки s */
+	text := "It was a boat. A small boat."
 
-	/* Split(s, sub) разбивает строку s на каждое вхождение указанной подстроки, возвращая срез. Если разделителем является пустая строка, то срез будет содержать строки для каждого символа */
-	splits := strings.Split(description, " ")
-	for _, x := range splits {
-		fmt.Println("Split >>" + x + "<<")
-	}
-	/* SplitN(s, sub, max) похожа на Split, но принимает дополнительный аргумент типа int указывающий максимальное количество возвращаемых строк. Последняя подстрока будет содержать не разделенную часть исходной строки */
+	var builder strings.Builder
 
-	/* SplitAfter(s, sub) похожа на Split, но включает строку используемую в результатах */
-	splitsAfter := strings.SplitAfter(description, " ")
-	for _, x := range splitsAfter {
-		fmt.Println("SplitAfter >>" + x + "<<")
+	for _, sub := range strings.Fields(text) {
+		if sub == "small" {
+			builder.WriteString("vary ")
+		}
+		builder.WriteString(sub)
+		builder.WriteRune(' ')
 	}
-	/* SplitAfterN(s, sub, max) похожа на SplitAfter, но принимает дополнительный аргумент типа int, указывающий максимальное количество возвращаемых строк */
+
+	fmt.Println("String:", builder.String())
 }
