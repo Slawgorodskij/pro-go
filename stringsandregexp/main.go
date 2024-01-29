@@ -1,10 +1,5 @@
 package main
 
-import (
-	"fmt"
-	"strings"
-)
-
 /*  СРАВНЕНИЕ СТРОК  */
 
 //func main() {
@@ -292,18 +287,203 @@ Cap() - Возвращает количество байтов, выделенн
 Grow(size) - Увеличивает количество байтов, используемых для хранения
 */
 
-func main() {
-	text := "It was a boat. A small boat."
+// func main() {
+// 	text := "It was a boat. A small boat."
 
-	var builder strings.Builder
+// 	var builder strings.Builder
 
-	for _, sub := range strings.Fields(text) {
-		if sub == "small" {
-			builder.WriteString("vary ")
-		}
-		builder.WriteString(sub)
-		builder.WriteRune(' ')
-	}
+// 	for _, sub := range strings.Fields(text) {
+// 		if sub == "small" {
+// 			builder.WriteString("very ")
+// 		}
+// 		builder.WriteString(sub)
+// 		builder.WriteRune(' ')
+// 	}
 
-	fmt.Println("String:", builder.String())
-}
+// 	fmt.Println("String:", builder.String())
+// }
+
+/*
+Использование регулярных выражений
+Match(pattern, b) - возвращает bool - соответствует ли шаблон байтовому срезу b
+MatchString(pattern, s) - возвращает bool - соответствует ли шаблон строке s
+*/
+
+// func main() {
+// 	description := "A boat for one person."
+
+// 	match, err := regexp.MatchString("[A-z]oat", description)
+// 	if err == nil {
+// 		fmt.Println("Match:", match)
+// 	} else {
+// 		fmt.Println("Error:", err)
+// 	}
+
+// }
+
+/*
+Использование регулярных выражений
+Компиляция и повторное использование
+Compile(pattern) - возвращает RegExp, который можно использоваать для повторного сопоставления с указанным шаблоном
+MustCompile(pattern) - аналогичен предыдущему, но вызывает панику если указанный шаблон не может быть скомпилирован
+*/
+
+// func main() {
+// 	pattern, compileErr := regexp.Compile("[A-z]oat")
+// 	description := "A boat for one person."
+// 	question := "Is that a goat?"
+// 	preference := "I like oats"
+
+// 	if compileErr == nil {
+// 		fmt.Println("Description:", pattern.MatchString(description))
+// 		fmt.Println("Question:", pattern.MatchString(question))
+// 		fmt.Println("Preference:", pattern.MatchString(preference))
+// 	} else {
+// 		fmt.Println("Error:", compileErr)
+// 	}
+
+// }
+/*
+Description: true
+Question: true
+Preference: false
+*/
+
+// func getSubstring(s string, indices []int) string {
+// 	return string(s[indices[0]:indices[1]])
+// }
+
+// func main() {
+// 	pattern := regexp.MustCompile("K[a-z]{4}|[A-z]oat")
+// 	description := "Kayak. A boat for one person."
+
+// 	firstIndex := pattern.FindStringIndex(description)
+// 	allIndices := pattern.FindAllStringIndex(description, -1)
+
+// 	fmt.Println("first index", firstIndex[0], "-", firstIndex[1], "=", getSubstring(description, firstIndex))
+
+// 	for i, idx := range allIndices {
+// 		fmt.Println("Index", i, "=", idx[0], "-", idx[1], "=", getSubstring(description, idx))
+// 	}
+
+// }
+/*
+first index 0 - 5 = Kayak
+Index 0 = 0 - 5 = Kayak
+Index 1 = 9 - 13 = boat
+*/
+
+// func main() {
+// 	pattern := regexp.MustCompile("K[a-z]{4}|[A-z]oat")
+// 	description := "Kayak. A boat for one person."
+
+// 	firstMatch := pattern.FindString(description)
+// 	allMatches := pattern.FindAllString(description, -1)
+
+// 	fmt.Println("First match", firstMatch)
+
+// 	for i, m := range allMatches {
+// 		fmt.Println("Match", i, "=", m)
+// 	}
+
+// }
+/*
+First match Kayak
+Match 0 = Kayak
+Match 1 = boat
+*/
+
+/*Разделение строк с помощью регулярного выражения*/
+
+// func main() {
+// 	pattern := regexp.MustCompile(" |boat|one")
+
+// 	description := "Kayak. A boat for one person."
+
+// 	split := pattern.Split(description, -1)
+
+// 	for _, s := range split {
+// 		if s != "" {
+// 			fmt.Println("Substring:", s)
+// 		}
+// 	}
+// }
+
+/*Использование под выражений*/
+
+// func main() {
+// 	pattern := regexp.MustCompile("A [A-z]* for [A-z]* person")
+
+// 	description := "Kayak. A boat for one person."
+
+// 	str := pattern.FindString(description)
+
+// 	fmt.Println("Match:", str)
+// }
+/*Match: A boat for one person*/
+
+// func main() {
+// 	pattern := regexp.MustCompile("A ([A-z]*) for ([A-z]*) person")
+
+// 	description := "Kayak. A boat for one person."
+
+// 	sub := pattern.FindStringSubmatch(description)
+
+// 	for _, s := range sub {
+// 		fmt.Println("Match:", s)
+// 	}
+// }
+/*
+Match: A boat for one person
+Match: boat
+Match: one
+*/
+
+/*Использование именнованых подвыражений*/
+
+// func main() {
+// 	pattern := regexp.MustCompile("A (?P<type>[A-z]*) for (?P<capacity>[A-z]*) person")
+
+// 	description := "Kayak. A boat for one person."
+
+// 	subs := pattern.FindStringSubmatch(description)
+
+// 	for _, name := range []string{"type", "capacity"} {
+// 		fmt.Println(name, "=", subs[pattern.SubexpIndex(name)])
+// 	}
+// }
+/*
+type = boat
+capacity = one
+*/
+
+/*Подмена строк с помощью регулярного выражения*/
+
+// func main() {
+// 	pattern := regexp.MustCompile("A (?P<type>[A-z]*) for (?P<capacity>[A-z]*) person")
+
+// 	description := "Kayak. A boat for one person."
+
+// 	template := "(type: ${type}, capacity: ${capacity})"
+
+// 	replaced := pattern.ReplaceAllString(description, template)
+
+// 	fmt.Println("ReplaceAllString: ", replaced)
+// }
+
+/*Kayak. (type: boat, capacity: one).*/
+
+/*Замена совпадающего контента функцией*/
+
+// func main() {
+// 	pattern := regexp.MustCompile("A (?P<type>[A-z]*) for (?P<capacity>[A-z]*) person")
+
+// 	description := "Kayak. A boat for one person."
+
+// 	replaced := pattern.ReplaceAllStringFunc(description, func(s string) string {
+// 		return "This is the replacement content"
+// 	})
+
+// 	fmt.Println(replaced)
+// }
+/*Kayak. This is the replacement content.*/
