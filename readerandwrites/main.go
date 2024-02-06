@@ -1,368 +1,285 @@
 package main
 
-import (
-	"fmt"
-	"io"
-	"strings"
-)
+/*кодирование данных JSON*/
 
 // func main() {
-// 	Printfln("Product: %v, Price: %v", Kayak.Name, Kayak.Price)
-// }
-
-/*
-Понимание средств чтения и записи
-пакет io
-интерфейсы Reader и Writer
-*/
-
-/*Понимание средств чтения*/
-
-// func processData(reader io.Reader) {
-// 	b := make([]byte, 2)
-
-// 	for {
-// 		count, err := reader.Read(b)
-// 		if count > 0 {
-// 			Printfln("Read %v bytes: %v", count, string(b[0:count]))
-// 		}
-// 		if err == io.EOF {
-// 			break
-// 		}
-// 	}
-// }
-
-// func main() {
-// 	r := strings.NewReader("Kayak")
-// 	processData(r)
-// }
-
-/*
-Read 2 bytes: Ka
-Read 2 bytes: ya
-Read 1 bytes: k
-*/
-
-/*Понимание средств записи*/
-
-// func processData(reader io.Reader, writer io.Writer) {
-// 	b := make([]byte, 2)
-
-// 	for {
-// 		count, err := reader.Read(b)
-// 		if count > 0 {
-// 			writer.Write(b[0:count])
-// 			Printfln("Read %v bytes: %v", count, string(b[0:count]))
-// 		}
-// 		if err == io.EOF {
-// 			break
-// 		}
-// 	}
-// }
-
-// func main() {
-// 	r := strings.NewReader("Kayak")
-// 	var builder strings.Builder
-// 	processData(r, &builder)
-// 	Printfln("String builder contents: %s", builder.String())
-// }
-
-/*
-Read 2 bytes: Ka
-Read 2 bytes: ya
-Read 1 bytes: k
-String builder contents: Kayak
-*/
-
-/*Использование служебных функций для программ чтения и записи*/
-
-// func processData(reader io.Reader, writer io.Writer) {
-// 	count, err := io.Copy(writer, reader)
-// 	if err == nil {
-// 		Printfln("Read %v bytes", count)
-// 	} else {
-// 		Printfln("error: %v", err.Error())
-// 	}
-// }
-
-// func main() {
-// 	r := strings.NewReader("Kayak")
-// 	var builder strings.Builder
-// 	processData(r, &builder)
-// 	Printfln("String builder contents: %s", builder.String())
-// }
-/*
-Read 5 bytes
-String builder contents: Kayak
-*/
-
-/*Использование специализированных средств чтения и записи*/
-
-/*Использование пайпов*/
-
-// func main() {
-// 	pipeReader, pipeWriter := io.Pipe()
-
-// 	go func() {
-// 		GenerateData(pipeWriter)
-// 		pipeWriter.Close()
-// 	}()
-// 	ConsumeData(pipeReader)
-// }
-
-/*
-Улучшение
-В функцию GenerateData добавлено
-	if closer, ok := writer.(io.Closer); ok {
-		closer.Close()
-	}
-*/
-
-// func main() {
-// 	pipeReader, pipeWriter := io.Pipe()
-// 	go GenerateData(pipeWriter)
-// 	ConsumeData(pipeReader)
-// }
-
-/*Объединение нескольких средств чтения*/
-
-// func main() {
-// 	r1 := strings.NewReader("Kayak")
-// 	r2 := strings.NewReader("Lifejacket")
-// 	r3 := strings.NewReader("Canoe")
-
-// 	concatReader := io.MultiReader(r1, r2, r3)
-// 	ConsumeData(concatReader)
-// }
-
-/*Объединение нескольких средств записи*/
-
-// func main() {
-// 	var w1 strings.Builder
-// 	var w2 strings.Builder
-// 	var w3 strings.Builder
-
-// 	combinedWriter := io.MultiWriter(&w1, &w2, &w3)
-
-// 	GenerateData(combinedWriter)
-
-// 	Printfln("Writer №1: %v", w1.String())
-// 	Printfln("Writer №2: %v", w2.String())
-// 	Printfln("Writer №3: %v", w3.String())
-// }
-
-/*повторение данных чтения во Writer*/
-
-// func main() {
-// 	r1 := strings.NewReader("Kayak")
-// 	r2 := strings.NewReader("Lifejacket")
-// 	r3 := strings.NewReader("Canoe")
-
-// 	concatReader := io.MultiReader(r1, r2, r3)
+// 	var b bool = true
+// 	var str string = "Hello"
+// 	var fval float64 = 99.99
+// 	var ival int = 200
+// 	var pointer *int = &ival
 
 // 	var writer strings.Builder
-// 	teeReader := io.TeeReader(concatReader, &writer)
+// 	encoder := json.NewEncoder(&writer)
 
-// 	ConsumeData(teeReader)
-// 	Printfln("Echo data: %v", writer.String())
+// 	for _, val := range []interface{}{b, str, fval, ival, pointer} {
+// 		encoder.Encode(val)
+// 	}
+// 	fmt.Print(writer.String())
 // }
 
-/*ограничение чтения данных*/
-
-// func main() {
-// 	r1 := strings.NewReader("Kayak")
-// 	r2 := strings.NewReader("Lifejacket")
-// 	r3 := strings.NewReader("Canoe")
-
-// 	concatReader := io.MultiReader(r1, r2, r3)
-
-// 	limited := io.LimitReader(concatReader, 5)
-// 	ConsumeData(limited)
-// }
 /*
-вывод с ограничением в 5 байтов
-Read data: Ka
-Read data: ya
-Read data: k
-Read data: Kayak
+true
+"Hello"
+99.99
+200
+200
 */
 
-/*Буферизация данных*/
+/*Кодирование массивов и срезов*/
 
 // func main() {
-// 	text := "It was a boat. A small boat."
+// 	names := []string{"Kayak", "Lifejaket", "Soccer Ball"}
+// 	numbers := [3]int{12, 20, 30}
 
-// 	var reader io.Reader = NewCustumReader(strings.NewReader(text))
+// 	var byteArray [5]byte
+// 	copy(byteArray[0:], []byte(names[0]))
+// 	byteSlice := []byte(names[0])
+
 // 	var writer strings.Builder
-// 	slice := make([]byte, 5)
-// 	for {
-// 		count, err := reader.Read(slice)
-// 		if count > 0 {
-// 			writer.Write(slice[0:count])
-// 		}
-// 		if err != nil {
-// 			break
-// 		}
-// 	}
-// 	Printfln("Read data: %v", writer.String())
+// 	encoder := json.NewEncoder(&writer)
+
+// 	encoder.Encode(names)
+// 	encoder.Encode(numbers)
+// 	encoder.Encode(byteArray)
+// 	encoder.Encode(byteSlice)
+
+// 	fmt.Print(writer.String())
 // }
 
-// func main() {
-// 	text := "It was a boat. A small boat."
+/*
+["Kayak","Lifejaket","Soccer Ball"]
+[12,20,30]
+байтовые массивы и срезы отличаются
+[75,97,121,97,107]
+"S2F5YWs="
+*/
 
-// 	var reader io.Reader = NewCustumReader(strings.NewReader(text))
+/*Кодирование карт*/
+
+// func main() {
+// 	m := map[string]float64{
+// 		"Kayak":      279,
+// 		"Lifejacket": 49.95,
+// 	}
+
 // 	var writer strings.Builder
-// 	slice := make([]byte, 5)
+// 	encoder := json.NewEncoder(&writer)
 
-// 	reader = bufio.NewReader(reader)
+// 	encoder.Encode(m)
 
-// 	for {
-// 		count, err := reader.Read(slice)
-// 		if count > 0 {
-// 			writer.Write(slice[0:count])
-// 		}
-// 		if err != nil {
-// 			break
-// 		}
-// 	}
-// 	Printfln("Read data: %v", writer.String())
+// 	fmt.Print(writer.String())
 // }
 
-/*Использование дополнительных методов буферизованного чтения*/
+/*{"Kayak":279,"Lifejacket":49.95}*/
+
+/*Кодирование структур*/
 
 // func main() {
-// 	text := "It was a boat. A small boat."
-
-// 	var reader io.Reader = NewCustumReader(strings.NewReader(text))
 // 	var writer strings.Builder
-// 	slice := make([]byte, 5)
+// 	encoder := json.NewEncoder(&writer)
 
-// 	buffered := bufio.NewReader(reader)
+// 	encoder.Encode(Kayak)
+
+// 	fmt.Print(writer.String())
+// }
+
+/*{"Name":"Kayak","Category":"Watersports","Price":279}*/
+
+/*Понимание еффекта продвижения в JSON при кодировании*/
+
+// func main() {
+// 	var writer strings.Builder
+// 	encoder := json.NewEncoder(&writer)
+
+// 	dp := DiscountedProduct{
+// 		Product:  &Kayak,
+// 		Discount: 10.50,
+// 	}
+
+// 	encoder.Encode(dp)
+
+// 	fmt.Print(writer.String())
+// }
+/*{"Name":"Kayak","Category":"Watersports","Price":279,"Discount":10.5}*/
+
+/*
+настройка JSON-кодирования структур
+
+в discoun.go внесли изменения, добавлено `json:"product"`
+
+вывод изменится
+{"product":{"Name":"Kayak","Category":"Watersports","Price":279},"Discount":10.5}
+использование тэга предотвратло продвижение поля
+*/
+
+/*
+пропуск поля
+
+в discoun.go внесли изменения, добавлено `json:"-"`
+
+в выводе поле Discount к которому добавлен тэг пропущено
+{"product":{"Name":"Kayak","Category":"Watersports","Price":279}}
+*/
+
+/*пропуск не назначенных полей*/
+
+// func main() {
+// 	var writer strings.Builder
+// 	encoder := json.NewEncoder(&writer)
+
+// 	dp := DiscountedProduct{
+// 		Product:  &Kayak,
+// 		Discount: 10.50,
+// 	}
+
+// 	encoder.Encode(dp)
+
+// 	db2 := DiscountedProduct{Discount: 10.50}
+// 	encoder.Encode(&db2)
+
+// 	fmt.Print(writer.String())
+// }
+
+/*
+{"product":{"Name":"Kayak","Category":"Watersports","Price":279}}
+{"product":null}
+
+применение omitempty
+{"product":{"Name":"Kayak","Category":"Watersports","Price":279}}
+{}
+
+использование omitempty без имени (`json:",omitempty"`)
+{"Name":"Kayak","Category":"Watersports","Price":279}
+{}
+
+*/
+
+/*
+Принудительное кодирование полей как строк
+
+тэг- `json:",string"`
+
+до
+{"Name":"Kayak","Category":"Watersports","Price":279,"Discount":10.5}
+{"Discount":10.5}
+
+после
+{"Name":"Kayak","Category":"Watersports","Price":279,"Discount":"10.5"}
+{"Discount":"10.5"}
+*/
+
+/*Интерфейсы кодирования добавлен файл interface.go*/
+// func main() {
+// 	var writer strings.Builder
+// 	encoder := json.NewEncoder(&writer)
+
+// 	dp := DiscountedProduct{
+// 		Product:  &Kayak,
+// 		Discount: 10.50,
+// 	}
+
+// 	namedItems := []Named{&dp, &Person{PersonName: "Alice"}}
+// 	encoder.Encode(namedItems)
+
+// 	fmt.Print(writer.String())
+// }
+/*[{"Name":"Kayak","Category":"Watersports","Price":279,"Discount":"10.5"},{"PersonName":"Alice"}]*/
+
+/*Создание полностью настраиваемых кодировок JSON*/
+
+// func main() {
+// 	var writer strings.Builder
+// 	encoder := json.NewEncoder(&writer)
+
+// 	dp := DiscountedProduct{
+// 		Product:  &Kayak,
+// 		Discount: 10.50,
+// 	}
+
+// 	namedItems := []Named{&dp, &Person{PersonName: "Alice"}}
+// 	encoder.Encode(namedItems)
+
+// 	fmt.Print(writer.String())
+// }
+
+/*
+В файл discount.go добавлена функция - func (dp *DiscountedProduct) MarshalJSON() (jsn []byte, err error)
+[{"cost":268.5,"product":"Kayak"},{"PersonName":"Alice"}]
+*/
+
+/*Декодирование данных JSON*/
+
+// func main() {
+// 	reader := strings.NewReader(`true "Hello" 99.99 200`)
+// 	vals := []interface{}{}
+
+// 	decoder := json.NewDecoder(reader)
 
 // 	for {
-// 		count, err := buffered.Read(slice)
-// 		if count > 0 {
-// 			Printfln("Buffer size: %v, buffered: %v", buffered.Size(), buffered.Buffered())
-// 			writer.Write(slice[0:count])
-// 		}
-// 		if err != nil {
-// 			break
-// 		}
-// 	}
-// 	Printfln("Read data: %v", writer.String())
-// }
-
-/*Выполнение буферизированной записи*/
-
-//без буферизации
-
-// func main() {
-// 	text := "It was a boat. A small boat."
-
-// 	var builder strings.Builder
-// 	var writer = NewCustomWriter(&builder)
-// 	for i := 0; true; {
-// 		end := i + 5
-// 		if end >= len(text) {
-// 			writer.Write([]byte(text[i:]))
-// 			break
-// 		}
-// 		writer.Write([]byte(text[i:end]))
-// 		i = end
-// 	}
-// 	Printfln("Written data: %v", builder.String())
-// }
-
-// с буферизацией
-
-// func main() {
-// 	text := "It was a boat. A small boat."
-
-// 	var builder strings.Builder
-// 	var writer = bufio.NewWriterSize(NewCustomWriter(&builder), 20)
-// 	for i := 0; true; {
-// 		end := i + 5
-// 		if end >= len(text) {
-// 			writer.Write([]byte(text[i:]))
-// 			writer.Flush()
-// 			break
-// 		}
-// 		writer.Write([]byte(text[i:end]))
-// 		i = end
-// 	}
-// 	Printfln("Written data: %v", builder.String())
-// }
-
-/*Форматирование и сканирование с помощью средств чтения и записи*/
-
-/*Сканирование значений из считывателя*/
-
-// func scanFromReader(reader io.Reader, template string, vals ...interface{}) (int, error) {
-// 	return fmt.Fscanf(reader, template, vals...)
-// }
-
-// func main() {
-// 	reader := strings.NewReader("Kayak Watersports $279.00")
-
-// 	var name, category string
-// 	var price float64
-// 	scanTemplate := "%s %s $%f"
-
-// 	_, err := scanFromReader(reader, scanTemplate, &name, &category, &price)
-// 	if err != nil {
-// 		Printfln("Error: %v", err.Error())
-// 	} else {
-// 		Printfln("Name %v", name)
-// 		Printfln("Category %v", category)
-// 		Printfln("Price %.2f", price)
-// 	}
-// }
-
-// func scanSingle(reader io.Reader, val interface{}) (int, error) {
-// 	return fmt.Fscan(reader, val)
-// }
-
-// func main() {
-// 	reader := strings.NewReader("Kayak Watersports $279.00")
-
-// 	for {
-// 		var str string
-// 		_, err := scanSingle(reader, &str)
+// 		var decoderVal interface{}
+// 		err := decoder.Decode(&decoderVal)
 // 		if err != nil {
 // 			if err != io.EOF {
 // 				Printfln("Error: %v", err.Error())
 // 			}
 // 			break
 // 		}
-// 		Printfln("Value: %v", str)
+// 		vals = append(vals, decoderVal)
+// 	}
+
+// 	for _, val := range vals {
+// 		Printfln("Decoded (%T): %v", val, val)
 // 	}
 // }
 
-/*Запись отформатированных строк в Writer*/
+/*
+Decoded (bool): true
+Decoded (string): Hello
+Decoded (float64): 99.99
+Decoded (float64): 200
+*/
 
-// func writeFormatted(writer io.Writer, template string, vals ...interface{}) {
-// 	fmt.Fprintf(writer, template, vals...)
-// }
+/*Расшифровка числовых значений*/
 
 // func main() {
-// 	var writer strings.Builder
-// 	template := "Name: %s, Category: %s, Price: %.2f"
-// 	writeFormatted(&writer, template, "Kayak", "Watersports", float64(279))
-// 	fmt.Println(writer.String())
+// 	reader := strings.NewReader(`true "Hello" 99.99 200`)
+// 	vals := []interface{}{}
+
+// 	decoder := json.NewDecoder(reader)
+// 	decoder.UseNumber()
+
+// 	for {
+// 		var decoderVal interface{}
+// 		err := decoder.Decode(&decoderVal)
+// 		if err != nil {
+// 			if err != io.EOF {
+// 				Printfln("Error: %v", err.Error())
+// 			}
+// 			break
+// 		}
+// 		vals = append(vals, decoderVal)
+// 	}
+
+// 	for _, val := range vals {
+// 		if num, ok := val.(json.Number); ok {
+// 			if ival, err := num.Int64(); err == nil {
+// 				Printfln("Decoded Integer: %v", ival)
+// 			} else if fpval, err := num.Float64(); err == nil {
+// 				Printfln("Decoded Floating Point: %v", fpval)
+// 			} else {
+// 				Printfln("Decoded String: %v", num.String())
+// 			}
+// 		} else {
+// 			Printfln("Decoded (%T): %v", val, val)
+// 		}
+// 	}
 // }
+/*
+Decoded (bool): true
+Decoded (string): Hello
+Decoded Floating Point: 99.99
+Decoded Integer: 200
+*/
 
-/*Использование Replace с Writer*/
-
-func writeReplaced(writer io.Writer, str string, subs ...string) {
-	replacer := strings.NewReplacer(subs...)
-	replacer.WriteString(writer, str)
-}
-
-func main() {
-	text := "It was a boat. A small boat."
-	subs := []string{"boat", "kayak", "small", "huge"}
-
-	var writer strings.Builder
-	writeReplaced(&writer, text, subs...)
-	fmt.Println(writer.String())
-}
+/*Указание типов для декодирования*/
