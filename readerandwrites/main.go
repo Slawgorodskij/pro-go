@@ -1,5 +1,11 @@
 package main
 
+import (
+	"fmt"
+	"io"
+	"strings"
+)
+
 // func main() {
 // 	Printfln("Product: %v, Price: %v", Kayak.Name, Kayak.Price)
 // }
@@ -247,3 +253,116 @@ Read data: Kayak
 // }
 
 /*Выполнение буферизированной записи*/
+
+//без буферизации
+
+// func main() {
+// 	text := "It was a boat. A small boat."
+
+// 	var builder strings.Builder
+// 	var writer = NewCustomWriter(&builder)
+// 	for i := 0; true; {
+// 		end := i + 5
+// 		if end >= len(text) {
+// 			writer.Write([]byte(text[i:]))
+// 			break
+// 		}
+// 		writer.Write([]byte(text[i:end]))
+// 		i = end
+// 	}
+// 	Printfln("Written data: %v", builder.String())
+// }
+
+// с буферизацией
+
+// func main() {
+// 	text := "It was a boat. A small boat."
+
+// 	var builder strings.Builder
+// 	var writer = bufio.NewWriterSize(NewCustomWriter(&builder), 20)
+// 	for i := 0; true; {
+// 		end := i + 5
+// 		if end >= len(text) {
+// 			writer.Write([]byte(text[i:]))
+// 			writer.Flush()
+// 			break
+// 		}
+// 		writer.Write([]byte(text[i:end]))
+// 		i = end
+// 	}
+// 	Printfln("Written data: %v", builder.String())
+// }
+
+/*Форматирование и сканирование с помощью средств чтения и записи*/
+
+/*Сканирование значений из считывателя*/
+
+// func scanFromReader(reader io.Reader, template string, vals ...interface{}) (int, error) {
+// 	return fmt.Fscanf(reader, template, vals...)
+// }
+
+// func main() {
+// 	reader := strings.NewReader("Kayak Watersports $279.00")
+
+// 	var name, category string
+// 	var price float64
+// 	scanTemplate := "%s %s $%f"
+
+// 	_, err := scanFromReader(reader, scanTemplate, &name, &category, &price)
+// 	if err != nil {
+// 		Printfln("Error: %v", err.Error())
+// 	} else {
+// 		Printfln("Name %v", name)
+// 		Printfln("Category %v", category)
+// 		Printfln("Price %.2f", price)
+// 	}
+// }
+
+// func scanSingle(reader io.Reader, val interface{}) (int, error) {
+// 	return fmt.Fscan(reader, val)
+// }
+
+// func main() {
+// 	reader := strings.NewReader("Kayak Watersports $279.00")
+
+// 	for {
+// 		var str string
+// 		_, err := scanSingle(reader, &str)
+// 		if err != nil {
+// 			if err != io.EOF {
+// 				Printfln("Error: %v", err.Error())
+// 			}
+// 			break
+// 		}
+// 		Printfln("Value: %v", str)
+// 	}
+// }
+
+/*Запись отформатированных строк в Writer*/
+
+// func writeFormatted(writer io.Writer, template string, vals ...interface{}) {
+// 	fmt.Fprintf(writer, template, vals...)
+// }
+
+// func main() {
+// 	var writer strings.Builder
+// 	template := "Name: %s, Category: %s, Price: %.2f"
+// 	writeFormatted(&writer, template, "Kayak", "Watersports", float64(279))
+// 	fmt.Println(writer.String())
+// }
+
+/*Использование Replace с Writer*/
+
+func writeReplaced(writer io.Writer, str string, subs ...string) {
+	replacer := strings.NewReplacer(subs...)
+	replacer.WriteString(writer, str)
+}
+
+func main() {
+	text := "It was a boat. A small boat."
+	subs := []string{"boat", "kayak", "small", "huge"}
+
+	var writer strings.Builder
+	writeReplaced(&writer, text, subs...)
+	fmt.Println(writer.String())
+}
