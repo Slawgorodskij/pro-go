@@ -420,17 +420,109 @@ Key: Lifejacket, Value: 49.95
 
 /*Декодирование структур*/
 
+// func main() {
+// 	reader := strings.NewReader(`
+// 	{"Name" : "Kayak", "Category": "Watersports", "Price" : 279}
+// 	{"Name" : "Lifejacket", "Category": "Watersports"}
+// 	{"Name" : "Canoe", "Category": "Watersports", "price" : 100, "InStock" : true}
+// 	`)
+
+// 	decoder := json.NewDecoder(reader)
+
+// 	for {
+// 		var val Product
+// 		err := decoder.Decode(&val)
+// 		if err != nil {
+// 			if err != io.EOF {
+// 				Printfln("Error: %v", err.Error())
+// 			}
+// 			break
+// 		} else {
+// 			Printfln("Name: %v, Category: %v, Price: %v", val.Name, val.Category, val.Price)
+// 		}
+
+// 	}
+// }
+
+/*
+Name: Kayak, Category: Watersports, Price: 279
+Name: Lifejacket, Category: Watersports, Price: 0
+Name: Canoe, Category: Watersports, Price: 100
+*/
+
+/*Запрет неиспользуемых ключей*/
+
+// func main() {
+// 	reader := strings.NewReader(`
+// 	{"Name" : "Kayak", "Category": "Watersports", "Price" : 279}
+// 	{"Name" : "Lifejacket", "Category": "Watersports"}
+// 	{"Name" : "Canoe", "Category": "Watersports", "price" : 100, "InStock" : true}
+// 	`)
+
+// 	decoder := json.NewDecoder(reader)
+// 	decoder.DisallowUnknownFields()
+
+// 	for {
+// 		var val Product
+// 		err := decoder.Decode(&val)
+// 		if err != nil {
+// 			if err != io.EOF {
+// 				Printfln("Error: %v", err.Error())
+// 			}
+// 			break
+// 		} else {
+// 			Printfln("Name: %v, Category: %v, Price: %v", val.Name, val.Category, val.Price)
+// 		}
+
+// 	}
+// }
+
+/*
+Name: Kayak, Category: Watersports, Price: 279
+Name: Lifejacket, Category: Watersports, Price: 0
+Error: json: unknown field "InStock"
+*/
+
+
+/* Использование структурных тегогв для управления декодированием*/
+
+// func main() {
+// 	reader := strings.NewReader(`
+// 	{"Name" : "Kayak", "Category": "Watersports", "Price" : 279, "Offer" : "10"}
+// 	`)
+
+// 	decoder := json.NewDecoder(reader)
+
+// 	for {
+// 		var val DiscountedProduct
+// 		err := decoder.Decode(&val)
+// 		if err != nil {
+// 			if err != io.EOF {
+// 				Printfln("Error: %v", err.Error())
+// 			}
+// 			break
+// 		} else {
+// 			Printfln("Name: %v, Category: %v, Price: %v, Discount: %v", val.Name, val.Category, val.Price, val.Discount)
+// 		}
+
+// 	}
+// }
+
+/*Name: Kayak, Category: Watersports, Price: 279, Discount: 10*/
+
+
+/*Создание полностью настраиваемых декодеров JSON*/
+
+
 func main() {
 	reader := strings.NewReader(`
-	{"Name" : "Kayak", "Category": "Watersports", "Price" : 279}
-	{"Name" : "Lifejacket", "Category": "Watersports"}
-	{"Name" : "Canoe", "Category": "Watersports", "price" : 100, "InStock" : true}
+	{"Name" : "Kayak", "Category": "Watersports", "Price" : 279, "Offer" : "10"}
 	`)
 
 	decoder := json.NewDecoder(reader)
 
 	for {
-		var val Product
+		var val DiscountedProduct
 		err := decoder.Decode(&val)
 		if err != nil {
 			if err != io.EOF {
@@ -438,14 +530,29 @@ func main() {
 			}
 			break
 		} else {
-			Printfln("Name: %v, Category: %v, Price: %v", val.Name, val.Category, val.Price)
+			Printfln("Name: %v, Category: %v, Price: %v, Discount: %v", val.Name, val.Category, val.Price, val.Discount)
 		}
 
 	}
 }
 
-/*
-Name: Kayak, Category: Watersports, Price: 279
-Name: Lifejacket, Category: Watersports, Price: 0
-Name: Canoe, Category: Watersports, Price: 100
-*/
+/*Name: Kayak, Category: Watersports, Price: 279, Discount: 10*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
