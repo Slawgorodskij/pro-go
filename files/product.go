@@ -5,7 +5,7 @@ type Product struct {
 	Price          float64
 }
 
-var Products = []*Product{
+var Products = []Product{
 	{"Kayak", "Watersports", 279},
 	{"Lifejacket", "Watersports", 49.95},
 	{"Soccer Ball", "Soccer", 19.50},
