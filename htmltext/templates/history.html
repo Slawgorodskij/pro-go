@@ -1,0 +1,98 @@
+<h1>Template Value: {{ . }}</h1>
+<h2>Name: {{ .Name }}</h2>
+<h2>Category: {{ .Category }}</h2>
+<h2>Price: {{ printf "$%.2f" .Price }}</h2>
+<h2>Tax: {{ printf "$%.2f" .AddTax }}</h2>
+<h2>Dickount Price: {{ .ApplyDiscount 10 | printf "$%.2f" }}</h2>
+
+<!-- обрезание пробелов -->
+<h1>
+    {{- " " -}} Name: {{ .Name }}, Category: {{ .Category}}, Price,
+    {{- printf "$%.2f" .Price -}}
+</h1>
+
+<!-- итерация -->
+{{ range . -}}
+<h1> Name: {{ .Name }}, Category: {{ .Category}}, Price,
+    {{- printf "$%.2f" .Price -}} </h1>
+{{ end }}
+
+<!-- использование встроенных функций среза -->
+
+<h1>There are {{ len . }} products in the source data.</h1>
+<h2>First product: {{ index . 0}}</h2>
+{{ range slice . 3 5 -}}
+<h3> Name: {{ .Name }}, Category: {{ .Category}}, Price,
+    {{- printf "$%.2f" .Price -}} </h3>
+{{ end }}
+
+<!-- Условное выполнение содержимого шаблона -->
+
+<h1>There are {{ len . }} products in the source data.</h1>
+<h2>First product: {{ index . 0}}</h2>
+{{ range . -}}
+{{if lt .Price 100.00 -}}
+<h3> Name: {{ .Name }}, Category: {{ .Category}}, Price,
+    {{- printf "$%.2f" .Price -}} </h3>
+{{end -}}
+{{ end }}
+
+<!-- исполльзование дополнительных условных действий -->
+
+<h1>There are {{ len . }} products in the source data.</h1>
+<h2>First product: {{ index . 0}}</h2>
+{{ range . -}}
+{{if lt .Price 100.00 -}}
+<h3> Name: {{ .Name }}, Category: {{ .Category}}, Price,
+    {{- printf "$%.2f" .Price -}} </h3>
+{{ else if gt .Price 1500.00 -}}
+<h3>Expensive Product {{ .Name }}({{printf "$%.2f" .Price }})</h3>
+{{else -}}
+<h3>Midrange Product: {{ .Name }}({{printf "$%.2f" .Price }})</h3>
+{{end -}}
+{{ end }}
+
+<!-- создание именнованых вложенных шаблонов -->
+
+{{ define "currency" }}{{printf "$%.2f" .}}{{end}}
+
+{{ define "basicProduct" -}}
+Name: {{ .Name}}, Category: {{ .Category}}, Price,
+{{- template "currency" .Price}}
+{{- end}}
+
+{{ define "expensiveProduct" -}}
+Expensive Product {{ .Name }}({{- template "currency" .Price}})
+{{- end}}
+
+{{define "mainTemplate" -}}
+<h1>There are {{ len . }} products in the source data.</h1>
+<h2>First product: {{ index . 0}}</h2>
+{{ range . -}}
+{{if lt .Price 100.00 -}}
+<h3> {{ template "basicProduct" .}} </h3>
+{{ else if gt .Price 1500.00 -}}
+<h3>{{ template "expensiveProduct" }}</h3>
+{{else -}}
+<h3>Midrange Product: {{ .Name }}({{printf "$%.2f" .Price }})</h3>
+{{end -}}
+{{ end }}
+{{- end}}
+
+/*Представление доступа к функциям стандартной библиотеки*/
+
+{{define "mainTemplate-sss" -}}
+<header>This is the layout hesder.</header>
+<h1>There are {{ len . }} products in the source data.</h1>
+{{range getCats . -}}
+<h2> Category: {{ lower . }}</h2>
+{{end}}
+
+{{range getCats . -}}
+{{if ne ($char := slice (lower .) 0 1) "s"}}
+<h2> {{$char}}: {{ . }}</h2>
+{{- end}}
+{{- end}}
+
+<footer>This is the layout footer</footer>
+{{- end}}

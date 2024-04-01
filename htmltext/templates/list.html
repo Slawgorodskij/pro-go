@@ -1,0 +1,5 @@
+{{ define "body" }}
+{{range getCats . -}}
+<h2> Category: {{ . }}</h2>
+{{ end -}}
+{{end}}
