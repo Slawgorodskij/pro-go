@@ -2,26 +2,41 @@ package main
 
 import "database/sql"
 
-func queryDatabase(db *sql.DB) {
+type Product struct {
+	Id       int
+	Name     string
+	Category int
+	Price    float64
+}
+
+func queryDatabase(db *sql.DB) []Product {
+	products := []Product{}
 	rows, err := db.Query("SELECT * FROM Products")
 	if err == nil {
 		for rows.Next() {
-			var id, category int
-			var name string
-			var price float64
-			rows.Scan(&id, &name, &category, &price)
-			Printfln("Row: %v %v %v %v", id, name, category, price)
+			p := Product{}
+			scanErr := rows.Scan(&p.Id, &p.Name, &p.Category, &p.Price)
+			if scanErr == nil {
+				products = append(products, p)
+			} else {
+				Printfln("Scan error: %v", scanErr)
+				break
+			}
 		}
 	} else {
 		Printfln("Error: %v", err)
 	}
+	return products
 }
 
 func main() {
 
 	db, err := openDatabase()
 	if err == nil {
-		queryDatabase(db)
+		products := queryDatabase(db)
+		for i, p := range products {
+			Printfln("#%v: %v", i, p)
+		}
 		db.Close()
 	} else {
 		panic(err)
