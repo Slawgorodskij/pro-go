@@ -1,5 +1,7 @@
 package main
 
+import "reflect"
+
 //func printDetails(values ...Product) {
 //	for _, elem := range values {
 //		Printfln("Product: Name: %v, Category: %v, Price: %v", elem.Name, elem.Category, elem.Price)
@@ -276,4 +278,191 @@ func main() {
 	}
 }
 */
+
 // Установка одного Value с помощью другого
+/*
+func setAll(src interface{}, targets ...interface{}) {
+	srcVal := reflect.ValueOf(src)
+	for _, target := range targets {
+		targetVal := reflect.ValueOf(target)
+		if targetVal.Kind() == reflect.Ptr && targetVal.Elem().Type() == srcVal.Type() && targetVal.Elem().CanSet() {
+			targetVal.Elem().Set(srcVal)
+		}
+	}
+}
+func main() {
+	name := "Alice"
+	price := 279
+	city := "London"
+	setAll("New String", &name, &price, &city)
+	setAll(10, &name, &price, &city)
+	for _, val := range []interface{}{name, price, city} {
+		Printfln("Value: %v", val)
+	}
+}
+*/
+
+// Сравнение Value
+/*
+При использовании этого варианта выдается ошибка:
+Found #1: true
+panic: runtime error: comparing uncomparable type []string
+goroutine 1 [running]:
+main.contains({0x4894c0?, 0xc000010030?}, {0x489a00, 0xc00010cf08})
+        /home/vladimir/project/pro-go/reflection/main.go:310 +0x12f
+main.main()
+        /home/vladimir/project/pro-go/reflection/main.go:322 +0x23c
+exit status 2
+
+func contains(slice interface{}, target interface{}) (found bool) {
+	sliceVal := reflect.ValueOf(slice)
+	if sliceVal.Kind() == reflect.Slice {
+		for i := 0; i < sliceVal.Len(); i++ {
+			if sliceVal.Index(i).Interface() == target {
+				found = true
+			}
+		}
+	}
+	return
+}
+*/
+/*
+//После внесенных изменений получаем ожидаемый результат
+func contains(slice interface{}, target interface{}) (found bool) {
+	sliceVal := reflect.ValueOf(slice)
+	targetType := reflect.TypeOf(target)
+	if sliceVal.Kind() == reflect.Slice && sliceVal.Type().Elem().Comparable() && targetType.Comparable() {
+		for i := 0; i < sliceVal.Len(); i++ {
+			if sliceVal.Index(i).Interface() == target {
+				found = true
+			}
+		}
+	}
+	return
+}
+
+func main() {
+	city := "London"
+	citiesSlice := []string{"Paris", "Rome", "London"}
+	Printfln("Found #1: %v", contains(citiesSlice, city))
+	sliceOfSlices := [][]string{citiesSlice, {"First", "Second", "Third"}}
+	Printfln("Found #2: %v", contains(sliceOfSlices, citiesSlice))
+}
+*/
+
+//Использование удобной функции сравнения https://pkg.go.dev/reflect@go1.17.1#DeepEqual,
+/*
+func contains(slice interface{}, target interface{}) (found bool) {
+	sliceVal := reflect.ValueOf(slice)
+	if sliceVal.Kind() == reflect.Slice {
+		for i := 0; i < sliceVal.Len(); i++ {
+			if reflect.DeepEqual(sliceVal.Index(i).Interface(), target) {
+				found = true
+			}
+		}
+	}
+	return
+}
+func main() {
+	city := "London"
+	citiesSlice := []string{"Paris", "Rome", "London"}
+	Printfln("Found #1: %v", contains(citiesSlice, city))
+	sliceOfSlices := [][]string{citiesSlice, {"First", "Second", "Third"}}
+	Printfln("Found	#2: %v", contains(sliceOfSlices, citiesSlice))
+}
+*/
+
+// Преобразование значений
+/*
+func convert(src, target interface{}) (result interface{}, assigned bool) {
+	srcVal := reflect.ValueOf(src)
+	targetVal := reflect.ValueOf(target)
+	if srcVal.Type().ConvertibleTo(targetVal.Type()) {
+		result = srcVal.Convert(targetVal.Type()).Interface()
+		assigned = true
+	} else {
+		result = src
+	}
+	return
+}
+func main() {
+	name := "Alice"
+	price := 279
+	newVal, ok := convert(price, 100.00)
+	Printfln("Converted %v: %v, %T", ok, newVal, newVal)
+	newVal, ok = convert(name, 100.00)
+	Printfln("Converted %v: %v, %T", ok, newVal, newVal)
+}
+*/
+
+// Преобразование числовых типов
+/*
+func IsInt(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return true
+	}
+	return false
+}
+
+func IsFloat(v reflect.Value) bool {
+	switch v.Kind() {
+	case reflect.Float32, reflect.Float64:
+		return true
+	}
+	return false
+}
+
+func convert(src, target interface{}) (result interface{}, assigned bool) {
+	srcVal := reflect.ValueOf(src)
+	targetVal := reflect.ValueOf(target)
+	if srcVal.Type().ConvertibleTo(targetVal.Type()) {
+		if (IsInt(targetVal) && IsInt(srcVal)) && targetVal.OverflowInt(srcVal.Int()) {
+			Printfln("Int overflow")
+			return src, false
+		} else if IsFloat(targetVal) && IsFloat(srcVal) && targetVal.OverflowFloat(srcVal.Float()) {
+			Printfln("Float overflow")
+			return src, false
+		}
+		result = srcVal.Convert(targetVal.Type()).Interface()
+		assigned = true
+	} else {
+		result = src
+	}
+	return
+}
+
+func main() {
+	name := "Alice"
+	price := 279
+
+	newVal, ok := convert(price, 100.00)
+	Printfln("Converted %v: %v, %T", ok, newVal, newVal)
+	newVal, ok = convert(name, 100.00)
+	Printfln("Converted %v: %v, %T", ok, newVal, newVal)
+	newVal, ok = convert(5000, int8(100))
+	Printfln("Converted %v: %v, %T", ok, newVal, newVal)
+}
+*/
+
+// Создание новых значений
+
+func swap(first interface{}, second interface{}) {
+	firstValue, secondValue := reflect.ValueOf(first),
+		reflect.ValueOf(second)
+	if firstValue.Type() == secondValue.Type() && firstValue.Kind() == reflect.Ptr && firstValue.Elem().CanSet() && secondValue.Elem().CanSet() {
+		temp := reflect.New(firstValue.Elem().Type())
+		temp.Elem().Set(firstValue.Elem())
+		firstValue.Elem().Set(secondValue.Elem())
+		secondValue.Elem().Set(temp.Elem())
+	}
+}
+func main() {
+	name := "Alice"
+	price := 279
+	city := "London"
+	swap(&name, &city)
+	for _, val := range []interface{}{name, price, city} {
+		Printfln("Value: %v", val)
+	}
+}
