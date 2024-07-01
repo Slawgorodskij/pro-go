@@ -3,6 +3,7 @@ package main
 import (
 	"platform/config"
 	"platform/logging"
+	"platform/placeholder"
 	"platform/services"
 )
 
@@ -23,23 +24,25 @@ func writeMessage(logger logging.Logger, cfg config.Configuration) {
 func main() {
 	services.RegisterDefaultServices()
 	/*
-		Становится не нужным после создания Call
-			var cfg config.Configuration
-			services.GetService(&cfg)
+			Становится не нужным после создания Call
+				var cfg config.Configuration
+				services.GetService(&cfg)
 
-			var logger logging.Logger
-			services.GetService(&logger)
+				var logger logging.Logger
+				services.GetService(&logger)
 
-			writeMessage(logger, cfg)
+				writeMessage(logger, cfg)
+		//после добавления placeholder
+		services.Call(writeMessage)
+
+		val := struct {
+			message string
+			logging.Logger
+		}{
+			message: "Hello from the struct",
+		}
+		services.Populate(&val)
+		val.Logger.Debug(val.message)
 	*/
-	services.Call(writeMessage)
-
-	val := struct {
-		message string
-		logging.Logger
-	}{
-		message: "Hello from the struct",
-	}
-	services.Populate(&val)
-	val.Logger.Debug(val.message)
+	placeholder.Start()
 }
