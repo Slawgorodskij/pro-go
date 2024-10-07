@@ -1,6 +1,7 @@
 SELECT
     Products.Id,
     Products.Name,
+    Products.Description,
     Products.Price,
     Categories.Id,
     Categories.Name
