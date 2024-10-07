@@ -42,9 +42,10 @@ platform - глава 34 "Действия, сеансы и авторизаци
 
 sportsstore - глава 35 "SportsStore: настоящее приложение"
 sportsstore - глава 36 "SportsStore: корзина и база данных"
-sportsstore - глава 36 "SportsStore: оформление заказа и администрирование"
+sportsstore - глава 37 "SportsStore: оформление заказа и администрирование"
+sportsstore - глава 38 "SportsStore: завершение и развертывание"
 
-Остановился на главе 37 страница 1239
+Остановился на главе 38 страница 1262
 
 https://golang.org/pkg - перечень встроенных в GO пакетов
 https://github.com/go-delve/delve - репозиторий отладчика
